@@ -6,8 +6,9 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from .forms import CheckoutForm
-from .models import Item, OrderItem, Order, BillingAddress
+from .models import Item, OrderItem, Order, BillingAddress, Payment
 from django.utils import timezone
+import requests as req
 
 
 class HomeView(ListView):
@@ -64,12 +65,64 @@ class CheckoutView(View):
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
+
+                if payment_option == 'E':
+                    return redirect('core:payment', payment_option='Esewa')
+                elif payment_option == 'C':
+                    return redirect('core:payment', payment_option='Debit Card')
+                else:
+                    messages.warning(self.request, 'Invalid Payment Method')
+                    return redirect('core:checkout')
+
+
                 return redirect('core:checkout')
             messages.warning(self.request, "Failed Checkout")
             return redirect('core:checkout')
         except ObjectDoesNotExist:
             messages.error(self.request, "You do not have an active order")
             return redirect("core:order-summary")
+
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        context = {
+            'order': order
+        }
+        return render(self.request, "payment.html", context)
+
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        amount = int(order.get_total())
+        try:
+            url = "https://uat.esewa.com.np/epay/main"
+            d = {'amt': amount,
+                 'pdc': 0,
+                 'psc': 0,
+                 'txAmt': 0,
+                 'tAmt': amount,
+                 'pid': 'ee2c3ca1-696b-4cc5-a6be-2c40d929d453',
+                 'scd': 'EPAYTEST',
+                 'su': 'http://merchant.com.np/page/esewa_payment_success?q=su',
+                 'fu': 'http://merchant.com.np/page/esewa_payment_failed?q=fu'
+                 }
+            req.post(url, d)
+
+
+            payment = Payment()
+            payment.esewa_charge_id = d['pid']
+            payment.user = self.request.user
+            payment.amount = amount
+            payment.save()
+
+            order.ordered = True
+            order.payment = payment
+            order.save()
+
+            messages.success(self.request, "Your Payment is Successfull")
+            return redirect('/')
+        except Exception as e:
+            messages.error(self.request, e)
+
 
 
 
