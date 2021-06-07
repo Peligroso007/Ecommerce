@@ -5,8 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
-from .forms import CheckoutForm
-from .models import Item, OrderItem, Order, BillingAddress, Payment
+from .forms import CheckoutForm, CouponForm
+from .models import Item, OrderItem, Order, BillingAddress, Payment, Coupon
 from django.utils import timezone
 import requests as req
 
@@ -36,12 +36,21 @@ class ItemDetailView(DetailView):
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
-        #form
-        form = CheckoutForm()
-        context = {
-            'form': form
-        }
-        return render(self.request, "checkout-page.html", context)
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            form = CheckoutForm()
+            context = {
+                'form': form,
+                'couponform': CouponForm(),
+                'order': order,
+                'DISPLAY_COUPON_FORM': True
+
+            }
+            return render(self.request, "checkout-page.html", context)
+        except ObjectDoesNotExist:
+            messages.info(self.request, "The Coupon code is invalid.")
+            return redirect('core:checkout')
+
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -85,10 +94,15 @@ class CheckoutView(View):
 class PaymentView(View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        context = {
-            'order': order
-        }
-        return render(self.request, "payment.html", context)
+        if order.billing_address:
+            context = {
+                'order': order,
+                'DISPLAY_COUPON_FORM': False
+            }
+            return render(self.request, "payment.html", context)
+        else:
+            messages.warning(self.request, "You have not added billing address yet.")
+            return redirect("core:order-summary")
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
@@ -114,6 +128,11 @@ class PaymentView(View):
             payment.amount = amount
             payment.save()
 
+            order_items = order.items.all()
+            order_items.update(ordered=True)
+            for item in order_items:
+                item.save()
+
             order.ordered = True
             order.payment = payment
             order.save()
@@ -122,6 +141,31 @@ class PaymentView(View):
             return redirect('/')
         except Exception as e:
             messages.error(self.request, e)
+
+
+def get_coupon(request, code):
+    try:
+        coupon = Coupon.objects.get(code=code)
+        return coupon
+    except ObjectDoesNotExist:
+        messages.info(request, "The Coupon code is invalid.")
+        return redirect('core:checkout')
+
+class AddCouponView(View):
+    def post(self, *args, **kwargs):
+        form = CouponForm(self.request.POST or None)
+        if form.is_valid():
+            try:
+                code = form.cleaned_data.get('code')
+                order = Order.objects.get(user=self.request.user, ordered=False)
+                order.coupon = get_coupon(self.request, code)
+                order.save()
+                messages.success(self.request, "The Coupon is successfully added.")
+                return redirect('core:checkout')
+
+            except ObjectDoesNotExist:
+                messages.info(self.request, "The Coupon code is invalid.")
+                return redirect('core:checkout')
 
 
 
