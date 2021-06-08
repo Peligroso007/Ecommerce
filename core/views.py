@@ -293,12 +293,6 @@ class AddCouponView(View):
                 return redirect('core:checkout')
 
 
-
-
-
-def product_view(request):
-    return render(request, "product-page.html", {'all_items': all_items})
-
 class RequestRefundView(View):
     def get(self, *args, **kwargs):
         form = RefundForm()
