@@ -13,7 +13,7 @@
       <!--Grid column-->
       <div class="col-md-6 mb-4">
 
-        <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/14.jpg" class="img-fluid" alt="">
+        <img src="{{ object.image.url }}" class="img-fluid" alt="">
 
       </div>
       <!--Grid column-->
@@ -24,9 +24,10 @@
         <!--Content-->
         <div class="p-4">
 
-          <div class="mb-3">
+          <div class="mb-3" style="display: flex;">
+              <h2>{{ object.title }}</h2>
             <a href="">
-              <span class="badge purple mr-1">{{ object.get_category_display }}</span>
+                <span class="badge purple ml-3">{{ object.get_category_display }}</span>
             </a>
           </div>
 
@@ -43,7 +44,7 @@
 
           <p class="lead font-weight-bold">Description</p>
 
-          <p>{{ object.discription }}.</p>
+          <p>{{ object.description }}.</p>
 
           <!-- <form class="d-flex justify-content-left">
              Default input
@@ -93,29 +94,15 @@
     <!--Grid row-->
     <div class="row wow fadeIn">
 
+        {% for item in items %}
       <!--Grid column-->
       <div class="col-lg-4 col-md-12 mb-4">
 
-        <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg" class="img-fluid" alt="">
+        <img src="{{ item.image.url }}" class="img-fluid" alt="">
 
       </div>
       <!--Grid column-->
-
-      <!--Grid column-->
-      <div class="col-lg-4 col-md-6 mb-4">
-
-        <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/12.jpg" class="img-fluid" alt="">
-
-      </div>
-      <!--Grid column-->
-
-      <!--Grid column-->
-      <div class="col-lg-4 col-md-6 mb-4">
-
-        <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/13.jpg" class="img-fluid" alt="">
-
-      </div>
-      <!--Grid column-->
+        {% endfor %}
 
     </div>
     <!--Grid row-->

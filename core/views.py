@@ -45,6 +45,13 @@ class ItemDetailView(DetailView):
     model = Item
     template_name = "product-page.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(ItemDetailView, self).get_context_data(**kwargs)
+        items = list(Item.objects.all())
+        random_items = random.sample(items, 3)
+        context['items'] = random_items
+        return context
+
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
@@ -290,10 +297,7 @@ class AddCouponView(View):
 
 
 def product_view(request):
-    # context = {
-    #     'items': Item.objects.all()
-    # }
-    return render(request, "product-page.html", {})
+    return render(request, "product-page.html", {'all_items': all_items})
 
 class RequestRefundView(View):
     def get(self, *args, **kwargs):
