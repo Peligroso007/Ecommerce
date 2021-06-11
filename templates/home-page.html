@@ -1,122 +1,202 @@
 {% extends "base.html" %}
 
+
+{% block extra_head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+:root{
+    --blue:#2980b9;
+}
+*{
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-transform: capitalize;
+    text-decoration: none;
+    transition: all .2s cubic-beizer(0.37,1.14,0.26,1.24);
+}
+*::selection{
+    background: #ff3300;
+     color: #fff;
+}
+html{
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+.btns{
+    height: 4rem;
+    width: 14rem;
+    background: var(--blue);
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+.btns:hover{
+    letter-spacing: .2rem;
+    opacity: .8;
+}
+.heading{
+    padding-top: 5rem;
+    width: 95%;
+    border-bottom: 0.2rem solid rgba(0,0,0,0.3);
+    margin: 0 auto;
+}
+.heading span{
+    font-size: 2rem;
+    padding: 1rem 6rem;
+    color: #fff;
+    background:var(--blue);
+    border-top-right-radius: 3rem;
+    display: inline-block;
+}
+
+.gallery{
+    min-height: 100vh;
+}
+.gallery .controls{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
+    list-style: none;
+}
+.gallery .controls .btns{
+    margin: 2rem;
+    line-height: 4rem;
+    text-align: center;
+    box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.3);
+}
+.gallery .controls .btns.button-active{
+    background: #333;
+}
+.gallery .image-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.gallery .image-container .box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3rem;
+    border: 0.1rem solid rgba(0,0,0,0.3);
+    flex:min-content;
+    flex-grow: 0;
+    flex-shrink: 0;
+    
+}
+.gallery .image-container .box .image{
+    height: 12rem;
+    width: 20rem;
+    text-align: center;
+    padding: 1rem;
+    background: #f0f0f0;
+}
+.gallery .image-container .box .image img{
+    height: 100%;
+    object-fit: cover;
+}
+.gallery .image-container .box:hover .image{
+    background: #ccc;
+}
+.gallery .image-container .box .info{
+    width: 100%;
+}
+.gallery .image-container .box .info h3{
+    font-size: 2rem;
+    color: var(--blue);
+    padding: 1rem;
+}
+.gallery .image-container .box .info .subinfo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 0.1rem solid rgba(0,0,0,0.3);
+    padding: 1rem;
+}
+.gallery .image-container .box .info .subinfo .price{
+    color: #ff3300;
+    font-size: 2rem;
+}
+.gallery .image-container .box .info .subinfo .stars i{
+    color: orange;
+    font-size: 1.5rem;
+}
+</style>
+{% endblock extra_head %}
+
+
+
+
+
+
 {% block content %}
 
 
-<!--Main layout-->
-<main>
-  <div class="container">
 
-    <!--Navbar-->
-    <nav class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5">
 
-      <!-- Navbar brand -->
-      <span class="navbar-brand">Categories:</span>
 
-      <!-- Collapse button -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-        aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
 
-      <!-- Collapsible content -->
-      <div class="collapse navbar-collapse" id="basicExampleNav">
 
-        <!-- Links -->
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">All
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Shirts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Sport wears</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Outwears</a>
-          </li>
 
-        </ul>
-        <!-- Links -->
 
-        <form class="form-inline">
-          <div class="md-form my-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          </div>
-        </form>
-      </div>
-      <!-- Collapsible content -->
-
-    </nav>
-    <!--/.Navbar-->
-
-    <!--Section: Products v.3-->
-    <section class="text-center mb-4">
-
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
+<section class="gallery" id="gallery">
+  <h1 class="heading"><span>product gallery</span></h1>
+  <ul class="controls">
+      <li class="btns button-active" data-filter="all">all</li>
+      <li class="btns" data-filter="Shirt">Shirt</li>
+      <li class="btns" data-filter="Outwear">Outwear</li>
+      <li class="btns" data-filter="headphone">headphone</li>
+      <li class="btns" data-filter="shoes">shoes</li>
+  </ul>
+  <div class="image-container">
+  
         {% for item in object_list %}
-        <div class="col-lg-3 col-md-6 mb-4">
+      <div class="box {{ item.get_category_display }}">
+          <div class="image">
+            <a href="{{ item.get_absolute_url }}">
 
-          <!--Card-->
-          <div class="card">
-
-            <!--Card image-->
-            <div style="height: 300px; width: 255px;" class="view overlay">
-{#              <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12.jpg" class="card-img-top"#}
-{#                alt="">#}
-                <img src="{{ item.image.url }}" class="card-img-top img-fluid">
-              <a href="{{ item.get_absolute_url }}">
-                <div class="mask rgba-white-slight"></div>
+              <img src="{{ item.image.url }}" alt="">
               </a>
-            </div>
-            <!--Card image-->
-
-            <!--Card content-->
-            <div class="card-body text-center">
-              <!--Category & Title-->
-              <a href="" class="grey-text">
-                <h5>{{ item.get_category_display }}</h5>
-              </a>
-              <h5>
-                <strong>
-                  <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}
-                    <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
-                  </a>
-                </strong>
-              </h5>
-
-              <h4 class="font-weight-bold blue-text">
-                <strong>$
-                  {% if item.discount_price %}
-                  {{ item.discount_price }}
-                  {% else %}
-                  {{ item.price }}
-                  {% endif %}
-                </strong>
-              </h4>
-
-            </div>
-            <!--Card content-->
-
           </div>
-          <!--Card-->
+          <div class="info">
+            <div style="display: flex;"><a href="{{ item.get_absolute_url }}">
 
-        </div>
-        {% endfor %}
-        <!--Grid column-->
+              <h3>{{ item.title }}</h3>
 
+              </a>
+              <a href="{{ item.get_absolute_url }}">
+              <span class="badge purple ml-3" style="display:inline-flex;">{{ item.get_category_display }}</span>
+
+              </a>
+
+            </div>
+           
+
+              <div class="subinfo">
+                  <strong class="price">Rs. {% if item.discount_price %}
+                    {{ item.discount_price }}
+                    {% else %}
+                    {{ item.price }}
+                    {% endif %}/-</strong>
+                  <div class="stars">
+                     <i class="fa fa-star"></i>
+                     <i class="fa fa-star"></i>
+                     <i class="fa fa-star"></i>
+                     <i class="fa fa-star"></i>
+                     <i class="fa fa-star-half"></i>
+                  </div>
+              </div>
+          </div>
       </div>
-      <!--Grid row-->
-
-    </section>
-    <!--Section: Products v.3-->
-
-    <!--Pagination-->
+      {% endfor %}
+      </div>
+  <!--Pagination-->
   {% if is_paginated %}
     <nav class="d-flex justify-content-center wow fadeIn">
       <ul class="pagination pg-blue">
@@ -147,11 +227,74 @@
       </ul>
     </nav>
   {% endif %}
+
     <!--Pagination-->
 
-  </div>
-</main>
-<!--Main layout-->
+  
+      
+      
+  
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
 
 
 {% endblock content %}
+{% block script %}
+<script>
+// $(document).ready(function(){
+
+$('.gallery .btns').click(function(){
+  let filter = $(this).attr('data-filter');
+  if(filter=='all'){
+      $('.gallery .box').show(400);
+  }else{
+      $('.gallery .box').not('.'+filter).hide(200);
+      $('.gallery .box').filter('.'+filter).show(200);
+  }
+  $(this).addClass('button-active').siblings().removeClass('button-active');
+})
+
+// });
+</script>
+
+{% endblock script %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
