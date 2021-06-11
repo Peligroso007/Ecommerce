@@ -18,10 +18,12 @@
     <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
-   
 
 
     <style type="text/css">
+        :root{
+    --blue:#2980b9;
+}
         html,
         body,
         header,
@@ -31,74 +33,74 @@
 
 
         /* footer start  */
- /* .footer{
-    /* box-shadow: 0px 10px 5px #888, 0px -10px 5px #888; 
+        /* .footer{
+           /* box-shadow: 0px 10px 5px #888, 0px -10px 5px #888;
 
 
- } */
-.footer .box-container{
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.footer .box-container .box{
-    flex: 1 1 25rem;
-    margin: 2rem;
-}
-.footer .box-container .box .logo{
-    font-size: 2.5rem;
-    color: #333;
-}
-.footer .box-container .box i{
-    color: var(--blue);
-}
-.footer .box-container .box p{
-    font-size: 1.6rem;
-    padding: 1rem 0;
-    color: #666;
-}
-.footer .box-container .box h3{
-    font-size: 2.5rem;
-    color: var(--blue);
-}
+        } */
+        .footer .box-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-.footer .box-container .box:nth-child(2){
-    text-align: center;
-}
+        .footer .box-container .box {
+            flex: 1 1 15.625rem;
+            margin: 1.25rem;
+        }
 
-.footer .box-container .box:nth-child(2) a{
-    display: flex;
-    font-size: 2rem;
-    padding: .4rem 0;
-    color: #666;
-    justify-content: center;
-}
-.footer .box-container .box:nth-child(2) a:hover{
-    text-decoration: underline;
-}
+        .footer .box-container .box .logo {
+            font-size: 1.5625rem;
+            color: #333;
+        }
 
-.footer .credit{
-    text-align: center;
-    width: 85%;
-    margin: 0 auto;
-    padding: 1.4rem 0;
-    border-top: .1rem solid rgba(0,0,0,0.3);
-}
-.footer-line{
-    width: 85%;
-    border-top: .1rem solid rgba(0,0,0,0.3);
-    margin: auto;
-}
-/* footer end  */
+        .footer .box-container .box i {
+            color: var(--blue);
+        }
 
+        .footer .box-container .box p {
+            font-size: 1rem;
+            padding: 0.625rem 0;
+            color: #666;
+        }
 
+        .footer .box-container .box h3 {
+            font-size: 1.5625rem;
+            color: var(--blue);
+        }
 
+        .footer .box-container .box:nth-child(2) {
+            text-align: center;
+        }
 
+        .footer .box-container .box:nth-child(2) a {
+            display: flex;
+            font-size: 1.25rem;
+            padding: .4rem 0;
+            color: #666;
+            justify-content: center;
+        }
 
+        .footer .box-container .box:nth-child(2) a:hover {
+            text-decoration: underline;
+        }
 
+        .footer .credit {
+            text-align: center;
+            width: 85%;
+            margin: 0 auto;
+            padding: 1.4rem 0;
+            border-top: .1rem solid rgba(0, 0, 0, 0.3);
+            font-size: 1.5625rem;
+        }
 
+        .footer-line {
+            width: 85%;
+            border-top: .1rem solid rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
 
-
+        /* footer end  */
 
 
         @media (max-width: 740px) {
